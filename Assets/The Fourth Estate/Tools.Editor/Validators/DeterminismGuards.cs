@@ -20,7 +20,7 @@ namespace T4E.Tools.Editor.Validators
     {
         public int callbackOrder => 0;
 
-        // Only scan these roots (relative to project root). Adjust/add as needed.
+        // Only scan these roots (relative to project root). 
         static readonly string[] ScanRoots =
         {
             "Assets/The Fourth Estate/Domain",
@@ -96,7 +96,7 @@ namespace T4E.Tools.Editor.Validators
             string projRoot = Path.GetDirectoryName(Application.dataPath)!.Replace('\\','/');
             string AssetsRoot = Application.dataPath.Replace('\\','/');
 
-            // Collect files from the configured scan roots (that actually exist)
+            // Collect files from the configured scan roots 
             var candidates = ScanRoots
                 .Select(root => Path.Combine(projRoot, root).Replace('\\','/'))
                 .Where(Directory.Exists)

@@ -1,4 +1,3 @@
-// Infrastructure/Content/StubContentRepository.cs
 using System;
 using T4E.App.Abstractions;
 using T4E.Domain.Core.CET;

@@ -4,8 +4,8 @@ using T4E.Domain.Core.CET;
 
 namespace T4E.App.UseCases
 {
-    // Subscribes to ItemDue and forwards to the world as simple effects.
-    // Later, replace with a CET interpreter call.
+    // Subscribes to ItemDue and forwards to the world as effects.
+    // Later, CET interpreter call.
     public sealed class TimelineDispatcher
     {
         private readonly IWorldCommands _world;
@@ -21,15 +21,12 @@ namespace T4E.App.UseCases
         {
             _log.Info($"[Timeline] {item.Id} due at {at}");
 
-            // EA behavior: just translate the payload lists into Effects
             foreach (var nid in item.SpawnNewsIds)
                 _world.Apply(new Effect(EffectType.AddNews, nid));
 
             foreach (var lid in item.SpawnLeadIds)
                 _world.Apply(new Effect(EffectType.AddLead, lid));
 
-            // M2+: hand off to CET interpreter instead.
-            // _cet.Resolve(item, at, _world, _log);
         }
     }
 }

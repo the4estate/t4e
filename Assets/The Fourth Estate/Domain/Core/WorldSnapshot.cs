@@ -8,7 +8,7 @@ namespace T4E.Domain
         public Dictionary<string, string> Flags { get; private set; }
         public int Credibility { get; set; }
         public int RegimePressure { get; set; }
-        // … add Personas, Factions, Leads, Evidence, NewsQueue, Timeline, etc.
+        //  + … Personas, Factions, Leads, Evidence, NewsQueue, Timeline, etc.
 
         public WorldSnapshot(GameDate date)
         {

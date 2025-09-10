@@ -1,4 +1,3 @@
-// Application/UseCases/Time/TriggerDispatcher.cs
 using System.Collections.Generic;
 using T4E.Domain;
 using T4E.App.Abstractions;
@@ -25,13 +24,12 @@ namespace T4E.App.UseCases
             _bus = bus; _eval = eval; _apply = apply; _world = world; _cmds = cmds; _fired = fired;
             _bus.OnTriggered += OnTriggered;
         }
-
         private void OnTriggered(TriggerContext ctx)
         {
-            var snapshot = _world.Snapshot(ctx.Date);                 // read-only snapshot for evaluation
-            var staged = _eval.Evaluate(ctx, snapshot);       // pure
-            var count = _apply.Apply(staged);                 // calls IWorldCommands.Apply(effect)
+            var snapshot = _world.Snapshot(ctx.Date);                 
+            var staged = _eval.Evaluate(ctx, snapshot);       
 
+            var count = _apply.Apply(staged);                 
             // mark idempotency only after apply succeeds
             for (int i = 0; i < staged.Count; i++)
             {

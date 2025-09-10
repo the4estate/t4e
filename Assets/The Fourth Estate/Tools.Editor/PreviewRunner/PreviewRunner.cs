@@ -1,9 +1,9 @@
 ﻿#if UNITY_EDITOR
 using System.IO;
-using T4E.App.UseCases;                 // TimeService, TimelineScheduler, TimelineDispatcher, CadenceRules
-using T4E.Domain;                      // GameDate, Weekday, DaySegment, TimelineItem
-using T4E.Infrastructure;              // InMemoryWorld, UnityLogger, DeterministicRandom
-using T4E.Infrastructure.Content;      // ContentLoader  <-- add this
+using T4E.App.UseCases;                 
+using T4E.Domain;                      
+using T4E.Infrastructure;              
+using T4E.Infrastructure.Content;      
 using UnityEditor;
 using UnityEngine;
 

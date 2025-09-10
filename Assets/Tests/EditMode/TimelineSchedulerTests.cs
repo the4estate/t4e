@@ -26,7 +26,6 @@ public class TimelineSchedulerTests
 
         // Fire the slot
         time.AdvanceSegment(); // move past Evening -> triggers scheduler for that slot before segment advanced in this design? (We used listener on post-advance; so ensure we advanced INTO the slot first)
-        // Correction: advance INTO the slot
-        // Reset and do it properly:
+
     }
 }

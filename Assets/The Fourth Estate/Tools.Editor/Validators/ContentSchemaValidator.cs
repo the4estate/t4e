@@ -16,7 +16,7 @@ namespace T4E.Tools.Editor.Validators
         // Where your JSON lives
         private const string ContentDir = "Assets/The Fourth Estate/Infrastructure/Content";
 
-        // From common.schema.json -> IdString.pattern
+        // common.schema.json -> IdString.pattern
         private static readonly Regex IdPattern =
             new Regex("^[a-z]{3,8}\\.(news|lead|event|persona|faction|manifest|trial|location|state|scenario)\\.[a-z0-9_]+(?:_\\d{3})?$",
                       RegexOptions.Compiled);
@@ -187,7 +187,7 @@ namespace T4E.Tools.Editor.Validators
                         }
                     }
 
-                    // Optional: personas[] cross-ref, if you have personaIds collected above
+                    // personas[] cross-ref, if personaIds collected above
                     var personasArr = (JArray?)l["personas"] ?? new JArray();
                     foreach (var pTok in personasArr)
                     {
@@ -197,12 +197,9 @@ namespace T4E.Tools.Editor.Validators
                             errors.Add($"[lead:{id}] personas has null/empty id");
                             continue;
                         }
-                        // Uncomment this if you’ve filled personaIds earlier:
-                        // if (!personaIds.Contains(pid))
-                        //     errors.Add($"[lead:{id}] personas references missing id '{pid}'");
                     }
 
-                    // Optional: spawn_via_trigger_id shape check (string if present)
+                    // Spawn_via_trigger_id shape check 
                     var spawnVia = l.Value<string>("spawn_via_trigger_id");
                     if (l.ContainsKey("spawn_via_trigger_id") && string.IsNullOrWhiteSpace(spawnVia))
                         errors.Add($"[lead:{id}] spawn_via_trigger_id present but empty");

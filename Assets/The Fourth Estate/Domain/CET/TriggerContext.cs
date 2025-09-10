@@ -1,4 +1,3 @@
-// Domain/Core/CET/TriggerContext.cs
 using System.Collections.Generic;
 using T4E.Domain;
 

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using T4E.App.Abstractions;
-using T4E.Domain;                 // GameDate, WorldSnapshot
+using T4E.Domain;                 
 using T4E.Domain.Core.CET;
 
-// keep old code using EffectType working
 
 namespace T4E.Infrastructure
 {
@@ -16,11 +15,7 @@ namespace T4E.Infrastructure
         // Build a snapshot using the GameDate provided by the caller (TimeService/dispatcher)
         public WorldSnapshot Snapshot(GameDate now)
         {
-            // If your WorldSnapshot has a ctor(WorldSnapshot(GameDate date)) use this:
             return new WorldSnapshot(now);
-
-            // If your WorldSnapshot currently only has WorldSnapshot(int week):
-            // return new WorldSnapshot(now.Week);
         }
 
         public void Apply(Effect e)
@@ -40,14 +35,14 @@ namespace T4E.Infrastructure
                     break;
 
                 default:
-                    break; // add more handlers as you grow the state
+                    break; 
             }
         }
 
-        // Remove if unused; you had this in the MVP
+        
         public void Enqueue(TimelineItem _)
         {
-            // handled elsewhere in this MVP
+            // not in sude
         }
     }
 }

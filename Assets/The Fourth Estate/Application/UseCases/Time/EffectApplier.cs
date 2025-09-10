@@ -35,8 +35,6 @@ namespace T4E.App.UseCases
                 {
                     _log.Error("EffectApplier failed for " + inv.SourceRule.EventId +
                                "#" + inv.SourceRule.RuleIndex + ": " + ex.Message);
-                    // continue to next; if you prefer all-or-nothing,
-                    // throw here instead and mark/idempotency only on success.
                 }
             }
             return applied;

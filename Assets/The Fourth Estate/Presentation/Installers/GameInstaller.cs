@@ -1,8 +1,8 @@
-﻿using T4E.App.Abstractions;                 // IWorldCommands, IRandom, IClock, IAppLogger
+﻿using T4E.App.Abstractions;                 
 using T4E.App.UseCases;
-using T4E.Domain;                           // GameDate, Weekday, DaySegment, WorldSnapshot if you log it
-using T4E.Domain.Core.CET;                  // TriggerType, TriggerContext
-using T4E.Infrastructure;                   // DeterministicRandom, SystemClock, UnityLogger, InMemoryWorld
+using T4E.Domain;                           
+using T4E.Domain.Core.CET;                 
+using T4E.Infrastructure;                   
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,7 +27,7 @@ public sealed class GameInstaller : MonoBehaviour
     private IContentRepository _content;
     private IEvaluator _eval;
     private IEffectApplier _apply;
-    private TriggerDispatcher _cetDispatcher; // CET dispatcher (different from your existing TimelineDispatcher)
+    private TriggerDispatcher _cetDispatcher; 
 
     private InputAction _advanceAction;
     void Awake()
@@ -89,15 +89,14 @@ public sealed class GameInstaller : MonoBehaviour
     // ==== CET trigger publisher ====
     private void OnSegmentAdvancedCET(GameDate date)
     {
-        // Build a stable trigger-instance id for idempotency
-        // Example: "y1850-w1-Monday-Morning#seg"
+        // Build a stable trigger-instance id idempotency
         string trigId = $"y{date.Year}-w{date.Week}-{date.Day}-{date.Segment}#seg";
 
         var ctx = new TriggerContext(
             type: TriggerType.OnSegmentStart,
             date: date,
             segment: date.Segment,
-            dayOfWeek: (T4E.Domain.Weekday)date.Day,   // adjust cast if your TriggerContext expects your Weekday/WeekDay type
+            dayOfWeek: (T4E.Domain.Weekday)date.Day,   
             contextMap: null,                              // no extra context for time triggers
             triggerInstanceId: trigId
         );

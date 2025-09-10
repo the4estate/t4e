@@ -1,6 +1,4 @@
-// Application/Abstractions/Ports/ITriggerBus.cs
 using System;
-
 namespace T4E.App.Abstractions
 {
     using T4E.Domain.Core.CET;

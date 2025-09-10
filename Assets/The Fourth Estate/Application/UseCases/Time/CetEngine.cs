@@ -1,4 +1,3 @@
-// Application/UseCases/Time/CetEngine.cs
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace T4E.App.UseCases
         private readonly IContentRepository _content;     // already in Abstractions
         private readonly IFiredLedger _fired;             // we’ll add this port below
 
-        // Pre-indexed lookup: TriggerType -> rules[] (built at load)
+        // Pre-indexed lookup: TriggerType -> rules[] 
         private readonly Dictionary<TriggerType, Rule[]> _byTrigger;
 
         public CetEngine(IContentRepository content, IFiredLedger fired)

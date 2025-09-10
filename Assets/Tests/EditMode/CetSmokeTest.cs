@@ -1,4 +1,3 @@
-// Assets/The Fourth Estate/Tests/CET/CetSmokeTests.cs
 using NUnit.Framework;
 using T4E.App.Abstractions;
 using T4E.App.UseCases;

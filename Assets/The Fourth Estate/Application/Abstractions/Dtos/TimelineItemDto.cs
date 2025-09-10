@@ -1,4 +1,3 @@
-// Assets/.../App.Abstractions/SaveBlob.cs (or its own file)
 using System;
 
 namespace T4E.App.Abstractions

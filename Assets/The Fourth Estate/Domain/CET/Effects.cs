@@ -1,4 +1,3 @@
-// Domain/Core/CET/Effects.cs
 namespace T4E.Domain.Core.CET
 {
     public enum EffectType

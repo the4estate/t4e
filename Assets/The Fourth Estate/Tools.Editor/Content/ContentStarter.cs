@@ -13,10 +13,8 @@ namespace TheFourthEstate.Tools.Editor.Content
         [MenuItem("T4E/Content/Create Starter Pack")]
         public static void CreateStarterPack()
         {
-            // Ensure folder exists
             Directory.CreateDirectory(OutDir);
 
-            // Small helper to write a file only if it doesn't exist (to avoid clobbering)
             void WriteIfMissing(string file, string json)
             {
                 var path = Path.Combine(OutDir, file);

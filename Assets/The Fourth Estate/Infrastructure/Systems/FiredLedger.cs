@@ -1,4 +1,3 @@
-// Infrastructure/Systems/FiredLedger.cs
 using System.Collections.Generic;
 using T4E.App.Abstractions;
 
@@ -10,7 +9,7 @@ namespace T4E.Infrastructure
     /// </summary>
     public sealed class FiredLedger : IFiredLedger
     {
-        private readonly HashSet<string> _cache = new(); // in-memory; persist via save hooks
+        private readonly HashSet<string> _cache = new(); // in_memory
 
         private static string Key(string eventId, int ruleIndex, string trigId)
             => $"{eventId}#{ruleIndex}@{trigId}";

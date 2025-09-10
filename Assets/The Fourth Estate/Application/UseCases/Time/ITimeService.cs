@@ -4,7 +4,7 @@ namespace T4E.App.UseCases
     public interface ITimeService
     {
         GameDate Current { get; }
-        void AdvanceSegment(); // raises signals + runs timeline for the segment
+        void AdvanceSegment(); 
         void AdvanceDay();
         void AdvanceWeek();
     }

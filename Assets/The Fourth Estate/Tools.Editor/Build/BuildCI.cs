@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEngine; // for LogType
+using UnityEngine; 
 
 namespace T4E.Tools.Editor.Build
 {
@@ -90,16 +90,15 @@ namespace T4E.Tools.Editor.Build
             }
         }
 
-        // NEW: simple overload for when we already have a human-readable message
+        
         static void FailAndExit(string message)
         {
             throw new Exception($"Build failed: {message}");
         }
 
-        // Existing: extract first error from the BuildReport when available
+        // Extract first error from the BuildReport when available
         static void FailAndExit(BuildReport report)
         {
-            // Pull the first *error message text* directly (no null comparisons to struct)
             string detail = report.steps
                 .SelectMany(s => s.messages)
                 .Where(m => m.type == LogType.Error)
