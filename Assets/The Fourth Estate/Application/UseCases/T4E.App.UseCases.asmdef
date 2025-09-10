@@ -1,0 +1,6 @@
+{
+  "name": "T4E.App.UseCases",
+  "references": [ "T4E.Domain", "T4E.App.Abstractions" ],
+  "autoReferenced": true,
+  "noEngineReferences": true
+}

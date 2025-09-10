@@ -1,0 +1,12 @@
+{
+  "name": "T4E.Presentation",
+  "references": [
+    "T4E.Domain",
+    "T4E.App.Abstractions",
+    "T4E.App.UseCases",
+    "T4E.Infrastructure",
+    "Unity.InputSystem"
+  ],
+  "autoReferenced": true,
+  "noEngineReferences": false
+}

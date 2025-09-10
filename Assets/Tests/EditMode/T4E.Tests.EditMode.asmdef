@@ -1,0 +1,13 @@
+{
+  "name": "T4E.Tests.EditMode",
+  "references": [
+    "T4E.Domain",
+    "T4E.App.Abstractions",
+    "T4E.App.UseCases",
+    "T4E.Infrastructure"
+  ],
+  "includePlatforms": [ "Editor" ],
+  "autoReferenced": true,
+  "noEngineReferences": false,
+  "optionalUnityReferences": [ "TestAssemblies" ]
+}

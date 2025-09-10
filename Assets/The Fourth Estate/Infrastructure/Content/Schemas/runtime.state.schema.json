@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fourthestate.dev/schemas/runtime.state.schema.json",
+  "title": "Runtime State (Save/Load) — The Fourth Estate",
+  "x_version": "1.0.0",
+  "description": "Live game state and save-file shape.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "clock": {
+      "type": "object",
+      "properties": {
+        "dayOfWeek": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/DayOfWeek"
+        },
+        "segment": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Segment"
+        },
+        "week": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5200
+        },
+        "day_index": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "dayOfWeek",
+        "segment",
+        "week",
+        "day_index"
+      ],
+      "additionalProperties": false
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "slots_per_segment": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "default": 3
+        }
+      },
+      "required": [
+        "slots_per_segment"
+      ],
+      "additionalProperties": false
+    },
+    "newspaper": {
+      "type": "object",
+      "description": "Player-facing stats that are not global mood axes.",
+      "properties": {
+        "funds": {
+          "type": "integer",
+          "minimum": -1000000,
+          "maximum": 100000000,
+          "default": 0
+        }
+      },
+      "required": [
+        "funds"
+      ],
+      "additionalProperties": false
+    },
+    "flags": {
+      "type": "object",
+      "description": "Boolean world facts and memory switches.",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "mood": {
+      "type": "object",
+      "description": "Global atmosphere axes (−5..+5), Credibility may extend to −10..+10 if desired.",
+      "properties": {
+        "Fear": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5,
+          "default": 0
+        },
+        "Hope": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5,
+          "default": 0
+        },
+        "Reform": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5,
+          "default": 0
+        },
+        "Order": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5,
+          "default": 0
+        },
+        "Credibility": {
+          "type": "integer",
+          "minimum": -10,
+          "maximum": 10,
+          "default": 0
+        }
+      },
+      "required": [
+        "Fear",
+        "Hope",
+        "Reform",
+        "Order",
+        "Credibility"
+      ],
+      "additionalProperties": false
+    },
+    "persona_state": {
+      "type": "object",
+      "description": "Per-persona runtime stats.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "suspicion": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "default": 0
+          }
+        },
+        "required": [
+          "suspicion"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "faction_state": {
+      "type": "object",
+      "description": "Per-faction runtime stats.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "relation_to_press": {
+            "type": "integer",
+            "minimum": -5,
+            "maximum": 5,
+            "default": 0
+          },
+          "power": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "default": 0
+          }
+        },
+        "required": [
+          "relation_to_press",
+          "power"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "leads_active": {
+      "type": "array",
+      "items": {
+        "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+        "pattern": "^[a-z]{3,8}\\.lead\\."
+      },
+      "uniqueItems": true
+    },
+    "evidence_owned": {
+      "type": "object",
+      "description": "Which evidence types have been obtained per lead.",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/EvidenceType"
+        },
+        "uniqueItems": true
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "description": "Future (and possibly current) scheduled items by day and segment.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "segment": {
+            "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Segment"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Runtime UUID for this scheduled item."
+                },
+                "payload_id": {
+                  "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+                },
+                "slot_kind": {
+                  "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/SlotKind"
+                },
+                "priority": {
+                  "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Priority"
+                },
+                "background": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "exclusive_flag": {
+                  "type": "string"
+                },
+                "expires_after_segments": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                },
+                "meta": {
+                  "type": "object",
+                  "properties": {
+                    "persona_id": {
+                      "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+                    },
+                    "location_id": {
+                      "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "payload_id",
+                "slot_kind",
+                "priority",
+                "background"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "day_index",
+          "segment",
+          "items"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "issue_drafts": {
+      "type": "object",
+      "description": "Optional: current issue being assembled.",
+      "properties": {
+        "news_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+            "pattern": "^[a-z]{3,8}\\.news\\."
+          },
+          "uniqueItems": true
+        },
+        "chosen_tones": {
+          "type": "object",
+          "description": "Selected tone key per news id (keys must match tone_variants in content).",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "vault": {
+      "type": "object",
+      "description": "Archive / blackmail log via AddMemory effects.",
+      "properties": {
+        "memories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "flag": {
+                "type": "string",
+                "pattern": "^[a-z0-9_.:-]{1,64}$"
+              },
+              "ts": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Unix epoch ms"
+              }
+            },
+            "required": [
+              "text",
+              "flag",
+              "ts"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "clock",
+    "settings",
+    "newspaper",
+    "flags",
+    "mood",
+    "persona_state",
+    "faction_state",
+    "leads_active",
+    "evidence_owned",
+    "timeline"
+  ],
+  "additionalProperties": false
+}

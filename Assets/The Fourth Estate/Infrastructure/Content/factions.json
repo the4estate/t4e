@@ -1,0 +1,13 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.faction.liberals",
+      "era": "victorian",
+      "ideology_tags": ["reform"],
+      "stats": { "influence": 50, "hostility_to_press": 10, "stability": 60 },
+      "mood_bar": 0,
+      "suspicion_of_player": 0
+    }
+  ]
+}

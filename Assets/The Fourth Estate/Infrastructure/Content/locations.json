@@ -1,0 +1,12 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.location.city_square",
+      "era": "victorian",
+      "name": "City Square",
+      "type": "public",
+      "tags": ["gatherings"]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "T4E.Infrastructure",
+  "references": [ "T4E.Domain", "T4E.App.Abstractions" ],
+  "autoReferenced": true,
+  "noEngineReferences": false
+}

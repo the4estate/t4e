@@ -1,0 +1,12 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.trial.minor_sedition_001",
+      "era": "victorian",
+      "title": "Hearing on Sedition",
+      "steps": ["arraignment", "hearing", "verdict"],
+      "verdict_effects": []
+    }
+  ]
+}

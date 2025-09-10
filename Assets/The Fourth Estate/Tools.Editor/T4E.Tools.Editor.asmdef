@@ -1,0 +1,12 @@
+{
+  "name": "T4E.Tools.Editor",
+  "references": [
+    "T4E.Domain",
+    "T4E.App.Abstractions",
+    "T4E.App.UseCases",
+    "T4E.Infrastructure"
+  ],
+  "includePlatforms": [ "Editor" ],
+  "autoReferenced": true,
+  "noEngineReferences": false
+}

@@ -1,0 +1,21 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.event.demo_001",
+      "era": "victorian",
+      "trigger": "segment",
+      "schedule": { "dayOfWeek": "Tuesday", "segment": "Morning" },
+      "effects": [],
+      "spawns": { "news_ids": ["vic.news.demo_001"], "lead_ids": [], "narrative_ids": [] }
+    },
+    {
+      "id": "vic.event.demo_002",
+      "era": "victorian",
+      "trigger": "segment",
+      "schedule": { "dayOfWeek": "Sunday", "segment": "Evening" },
+      "effects": [],
+      "spawns": { "news_ids": [], "lead_ids": ["vic.lead.mill_003"], "narrative_ids": [] }
+    }
+  ]
+}

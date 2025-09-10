@@ -1,0 +1,20 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.scenario.demo_start",
+      "era": "victorian",
+      "title": "Demo Scenario",
+      "regime_state_id": "vic.state.const_monarchy",
+      "include_ids": {
+        "news":     ["vic.news.demo_001"],
+        "leads":    ["vic.lead.mill_003"],
+        "events":   ["vic.event.demo_001", "vic.event.demo_002"],
+        "personas": ["vic.persona.editor_001"],
+        "factions": ["vic.faction.liberals"],
+        "locations": ["vic.location.city_square"],
+        "trials":   ["vic.trial.minor_sedition_001"]
+      }
+    }
+  ]
+}

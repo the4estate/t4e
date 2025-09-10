@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fourthestate.dev/schemas/effects.schema.json",
+  "title": "Effects — The Fourth Estate",
+  "x_version": "1.0.0",
+  "description": "Typed, discrete actions that change state or schedule future items.",
+  "type": "object",
+  "oneOf": [
+    {
+      "title": "FlagSet",
+      "properties": {
+        "type": {
+          "const": "FlagSet"
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.:-]{1,64}$"
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "key",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "FlagClear",
+      "properties": {
+        "type": {
+          "const": "FlagClear"
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.:-]{1,64}$"
+        }
+      },
+      "required": [
+        "type",
+        "key"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "MoodDelta",
+      "properties": {
+        "type": {
+          "const": "MoodDelta"
+        },
+        "axis": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/MoodAxis"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "axis",
+        "amount"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "FactionMoodDelta",
+      "properties": {
+        "type": {
+          "const": "FactionMoodDelta"
+        },
+        "faction_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "faction_id",
+        "amount"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "CredibilityDelta",
+      "properties": {
+        "type": {
+          "const": "CredibilityDelta"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": -10,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "type",
+        "amount"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "SuspicionDelta",
+      "properties": {
+        "type": {
+          "const": "SuspicionDelta"
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "persona",
+            "faction",
+            "global"
+          ]
+        },
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": -10,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "type",
+        "target",
+        "id",
+        "amount"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "SpawnEvent",
+      "properties": {
+        "type": {
+          "const": "SpawnEvent"
+        },
+        "event_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        }
+      },
+      "required": [
+        "type",
+        "event_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "SpawnNews",
+      "properties": {
+        "type": {
+          "const": "SpawnNews"
+        },
+        "news_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        }
+      },
+      "required": [
+        "type",
+        "news_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "AddLead",
+      "properties": {
+        "type": {
+          "const": "AddLead"
+        },
+        "lead_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        }
+      },
+      "required": [
+        "type",
+        "lead_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "RemoveLead",
+      "properties": {
+        "type": {
+          "const": "RemoveLead"
+        },
+        "lead_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        }
+      },
+      "required": [
+        "type",
+        "lead_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "ScheduleMeeting",
+      "properties": {
+        "type": {
+          "const": "ScheduleMeeting"
+        },
+        "persona_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "location_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "segment": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Segment"
+        },
+        "priority": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Priority"
+        }
+      },
+      "required": [
+        "type",
+        "persona_id",
+        "location_id",
+        "segment"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "ScheduleItem",
+      "description": "Schedule any future item (meeting, raid, world event, letter...). Either use simple day_offset+segment OR a schedule block.",
+      "properties": {
+        "type": {
+          "const": "ScheduleItem"
+        },
+        "payload_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "slot_kind": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/SlotKind"
+        },
+        "segment": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Segment"
+        },
+        "day_offset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "schedule": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/ScheduleSpec"
+        },
+        "priority": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Priority"
+        },
+        "background": {
+          "type": "boolean",
+          "default": false
+        },
+        "exclusive_flag": {
+          "type": "string"
+        },
+        "expires_after_segments": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        }
+      },
+      "required": [
+        "type",
+        "payload_id",
+        "slot_kind"
+      ],
+      "allOf": [
+        {
+          "description": "Require either (segment [+ optional day_offset]) OR (schedule).",
+          "anyOf": [
+            {
+              "required": [
+                "segment"
+              ]
+            },
+            {
+              "required": [
+                "schedule"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "AddEvidence",
+      "properties": {
+        "type": {
+          "const": "AddEvidence"
+        },
+        "lead_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "evidence_type": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/EvidenceType"
+        }
+      },
+      "required": [
+        "type",
+        "lead_id",
+        "evidence_type"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "Arrest",
+      "properties": {
+        "type": {
+          "const": "Arrest"
+        },
+        "persona_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        }
+      },
+      "required": [
+        "type",
+        "persona_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "Fine",
+      "properties": {
+        "type": {
+          "const": "Fine"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        }
+      },
+      "required": [
+        "type",
+        "amount"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "UnlockLayout",
+      "properties": {
+        "type": {
+          "const": "UnlockLayout"
+        },
+        "layout_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "layout_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "AddMemory",
+      "properties": {
+        "type": {
+          "const": "AddMemory"
+        },
+        "text": {
+          "type": "string"
+        },
+        "flag": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.:-]{1,64}$"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "flag"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "ChangeRegimePressure",
+      "properties": {
+        "type": {
+          "const": "ChangeRegimePressure"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "amount"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "ChangeFactionRelation",
+      "properties": {
+        "type": {
+          "const": "ChangeFactionRelation"
+        },
+        "faction_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "faction_id",
+        "amount"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

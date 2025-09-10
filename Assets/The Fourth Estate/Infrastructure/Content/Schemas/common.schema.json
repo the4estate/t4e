@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fourthestate.dev/schemas/common.schema.json",
+  "title": "Common — The Fourth Estate",
+  "x_version": "1.0.0",
+  "description": "Shared primitives, enums, and scheduling specs used by all other schemas.",
+  "$defs": {
+    "IdString": {
+      "type": "string",
+      "description": "Stable content ID. era.type.slug[_NNN] (e.g., vic.news.riot_001).",
+      "pattern": "^[a-z]{3,8}\\.(news|lead|event|persona|faction|manifest|trial|location|state|scenario)\\.[a-z0-9_]+(?:_\\d{3})?$"
+    },
+    "EraPrefix": {
+      "type": "string",
+      "description": "Short lowercase era code (e.g., vic for Victorian).",
+      "pattern": "^[a-z]{3,8}$"
+    },
+    "FlagKey": {
+      "type": "string",
+      "description": "Engine/runtime flag key.",
+      "pattern": "^[a-z0-9_.:-]{1,64}$"
+    },
+
+    "Tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [ "politics", "labor", "royal", "colonial", "health", "industry", "crime", "religion" ]
+      },
+      "uniqueItems": true
+    },
+
+    "Segment": {
+      "type": "string",
+      "enum": [ "Morning", "Afternoon", "Evening", "Night" ]
+    },
+    "DayOfWeek": {
+      "type": "string",
+      "enum": [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]
+    },
+
+    "RegimeType": {
+      "type": "string",
+      "enum": [ "ConstitutionalMonarchy", "AuthoritarianMonarchy", "ProvisionalGovernment", "NascentRepublic" ]
+    },
+
+    "MoodAxis": {
+      "type": "string",
+      "enum": [ "Fear", "Hope", "Reform", "Order", "Credibility" ]
+    },
+
+    "EvidenceType": {
+      "type": "string",
+      "enum": [ "Witness", "Document", "Object" ]
+    },
+
+    "SourceType": {
+      "type": "string",
+      "enum": [ "Persona", "Anonymous" ]
+    },
+
+    "TriggerType": {
+      "type": "string",
+      "enum": [
+        "OnSegmentStart",
+        "OnDayStart",
+        "OnWeekStart",
+        "OnPublish",
+        "OnEditorialSubmitted",
+        "OnLeadInvestigated",
+        "OnEvidenceAdded",
+        "OnMeetingAttended",
+        "OnMeetingMissed",
+        "OnManifestDistributed",
+        "OnTrialVerdict"
+      ]
+    },
+
+    "SlotKind": {
+      "type": "string",
+      "enum": [ "meeting", "world_event", "letter", "raid", "trial", "location_story", "visit" ]
+    },
+
+    "Priority": {
+      "type": "integer",
+      "minimum": -10,
+      "maximum": 10,
+      "default": 0,
+      "description": "Higher wins when slots conflict."
+    },
+
+    "ScheduleSpec": {
+      "type": "object",
+      "description": "Place something on a particular day-of-week/segment relative to now.",
+      "properties": {
+        "dayOfWeek": { "$ref": "#/$defs/DayOfWeek" },
+        "segment": { "$ref": "#/$defs/Segment" },
+        "weekRelative": {
+          "type": "integer",
+          "minimum": -52,
+          "maximum": 52
+        },
+        "offsetDays": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365
+        }
+      },
+      "required": [ "segment" ],
+      "additionalProperties": false
+    },
+
+    "EventContextKey": {
+      "type": "string",
+      "enum": [ "persona_id", "location_id", "lead_id", "evidence_type", "trial_id", "verdict", "manifest_id", "issue_id", "segment", "day_index" ]
+    }
+  }
+}

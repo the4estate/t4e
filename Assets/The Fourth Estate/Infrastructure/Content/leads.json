@@ -1,0 +1,16 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.lead.mill_003",
+      "era": "victorian",
+      "title": "Whispers from the Mill",
+      "expose_text": "A pattern of dangerous neglect emerges.",
+      "difficulty": 2,
+      "personas": [],
+      "evidence_requirement": { "min_total": 2, "allow": ["witness", "document"] },
+      "spawn_via_trigger_id": "vic.event.demo_002",
+      "on_expose_effects": []
+    }
+  ]
+}

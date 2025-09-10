@@ -1,0 +1,466 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fourthestate.dev/schemas/content.schema.json",
+  "title": "Content — The Fourth Estate",
+  "x_version": "1.0.0",
+  "description": "Authorable entities (one per file).",
+  "$defs": {
+    "NewsToneBlock": {
+      "type": "object",
+      "properties": {
+        "headline": {
+          "type": "string"
+        },
+        "body_short": {
+          "type": "string"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/effects.schema.json"
+          }
+        }
+      },
+      "required": [
+        "headline",
+        "body_short",
+        "effects"
+      ],
+      "additionalProperties": false
+    },
+    "EventRule": {
+      "type": "object",
+      "description": "Rules evaluated when the trigger fires.",
+      "properties": {
+        "trigger": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/TriggerType"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/conditions.schema.json"
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/effects.schema.json"
+          }
+        },
+        "schedule": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/ScheduleSpec"
+        },
+        "slot_kind": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/SlotKind"
+        },
+        "priority": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Priority"
+        },
+        "exclusive_flag": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "trigger",
+        "effects"
+      ],
+      "additionalProperties": false
+    },
+    "News": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+          "pattern": "^[a-z]{3,8}\\.news\\."
+        },
+        "title": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "tags": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Tags"
+        },
+        "personas_involved": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+          },
+          "uniqueItems": true
+        },
+        "factions_involved": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+          },
+          "uniqueItems": true
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/SourceType"
+            },
+            "id": {
+              "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "Persona"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "id"
+                ]
+              }
+            }
+          ],
+          "additionalProperties": false
+        },
+        "tone_locked": {
+          "type": "boolean",
+          "default": false
+        },
+        "impact": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "default": "medium"
+        },
+        "visual_id": {
+          "type": "string"
+        },
+        "shared_body": {
+          "type": "string"
+        },
+        "generic": {
+          "$ref": "#/$defs/NewsToneBlock"
+        },
+        "tone_variants": {
+          "type": "object",
+          "description": "Dictionary of tone keys to tone blocks. Keys are scenario-defined (e.g., Supportive, Neutral, Critical, Satirical...).",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/NewsToneBlock"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "subject",
+        "tags",
+        "shared_body"
+      ],
+      "allOf": [
+        {
+          "description": "Require at least one of generic or tone_variants.",
+          "anyOf": [
+            {
+              "required": [
+                "generic"
+              ]
+            },
+            {
+              "required": [
+                "tone_variants"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalProperties": false
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+          "pattern": "^[a-z]{3,8}\\.event\\."
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EventRule"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "Lead": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+          "pattern": "^[a-z]{3,8}\\.lead\\."
+        },
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "personas_involved": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+          },
+          "uniqueItems": true
+        },
+        "evidence_requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/EvidenceType"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "on_complete_effects": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/effects.schema.json"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "summary",
+        "evidence_requirements"
+      ],
+      "additionalProperties": false
+    },
+    "Persona": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+          "pattern": "^[a-z]{3,8}\\.persona\\."
+        },
+        "name": {
+          "type": "string"
+        },
+        "faction_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "influence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 0
+        },
+        "suspicion": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 0
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Faction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+          "pattern": "^[a-z]{3,8}\\.faction\\."
+        },
+        "name": {
+          "type": "string"
+        },
+        "power": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 0
+        },
+        "relation_to_press": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5,
+          "default": 0
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Location": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+          "pattern": "^[a-z]{3,8}\\.location\\."
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "bar",
+            "church",
+            "office",
+            "factory",
+            "court",
+            "newspaper_office",
+            "street",
+            "residence"
+          ]
+        },
+        "open_segments": {
+          "type": "array",
+          "items": {
+            "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Segment"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "open_segments"
+      ],
+      "additionalProperties": false
+    },
+    "Scenario": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString",
+          "pattern": "^[a-z]{3,8}\\.scenario\\."
+        },
+        "title": {
+          "type": "string"
+        },
+        "era_prefix": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/EraPrefix"
+        },
+        "tone_palette": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "start_state": {
+          "type": "object",
+          "description": "Minimal boot state (subset of runtime.state).",
+          "properties": {
+            "flags": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "boolean"
+              }
+            },
+            "mood": {
+              "type": "object",
+              "properties": {
+                "Fear": {
+                  "type": "integer",
+                  "minimum": -5,
+                  "maximum": 5,
+                  "default": 0
+                },
+                "Hope": {
+                  "type": "integer",
+                  "minimum": -5,
+                  "maximum": 5,
+                  "default": 0
+                },
+                "Reform": {
+                  "type": "integer",
+                  "minimum": -5,
+                  "maximum": 5,
+                  "default": 0
+                },
+                "Order": {
+                  "type": "integer",
+                  "minimum": -5,
+                  "maximum": 5,
+                  "default": 0
+                },
+                "Credibility": {
+                  "type": "integer",
+                  "minimum": -10,
+                  "maximum": 10,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false
+            },
+            "slots_per_segment": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8,
+              "default": 3
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "era_prefix"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/News"
+    },
+    {
+      "$ref": "#/$defs/Event"
+    },
+    {
+      "$ref": "#/$defs/Lead"
+    },
+    {
+      "$ref": "#/$defs/Persona"
+    },
+    {
+      "$ref": "#/$defs/Faction"
+    },
+    {
+      "$ref": "#/$defs/Location"
+    },
+    {
+      "$ref": "#/$defs/Scenario"
+    }
+  ]
+}

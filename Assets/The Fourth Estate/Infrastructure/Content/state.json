@@ -1,0 +1,14 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.state.const_monarchy",
+      "era": "victorian",
+      "type": "Constitutional Monarchy",
+      "institutions": ["Parliament", "Crown", "Courts"],
+      "base_laws": ["Press Law 1850"],
+      "press_rules": "moderate",
+      "police_pressure_curve": "medium"
+    }
+  ]
+}

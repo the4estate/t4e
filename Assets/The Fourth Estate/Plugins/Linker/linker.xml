@@ -1,0 +1,9 @@
+﻿<linker>
+	<assembly fullname="TheFourthEstate.Application.UseCases">
+		<type fullname="TheFourthEstate.Application.UseCases.*" preserve="methods"/>
+	</assembly>
+	<assembly fullname="TheFourthEstate.Infrastructure">
+		<type fullname="*.Factories.*" preserve="all"/>
+		<type fullname="*.Serialization.*" preserve="all"/>
+	</assembly>
+</linker>

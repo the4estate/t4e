@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fourthestate.dev/schemas/conditions.schema.json",
+  "title": "Conditions — The Fourth Estate",
+  "x_version": "1.0.0",
+  "description": "Boolean gates evaluated when a trigger fires.",
+  "$defs": {
+    "FlagKey": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.:-]{1,64}$"
+    }
+  },
+  "type": "object",
+  "oneOf": [
+    {
+      "title": "DayOfWeekIs",
+      "properties": {
+        "type": {
+          "const": "DayOfWeekIs"
+        },
+        "day": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/DayOfWeek"
+        }
+      },
+      "required": [
+        "type",
+        "day"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "SegmentIs",
+      "properties": {
+        "type": {
+          "const": "SegmentIs"
+        },
+        "segment": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/Segment"
+        }
+      },
+      "required": [
+        "type",
+        "segment"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "WeekAtLeast",
+      "properties": {
+        "type": {
+          "const": "WeekAtLeast"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5200
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "WeekInRange",
+      "properties": {
+        "type": {
+          "const": "WeekInRange"
+        },
+        "min": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5200
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5200
+        }
+      },
+      "required": [
+        "type",
+        "min",
+        "max"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "FlagIs",
+      "properties": {
+        "type": {
+          "const": "FlagIs"
+        },
+        "key": {
+          "$ref": "#/$defs/FlagKey"
+        },
+        "value": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "key",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "FlagExists",
+      "properties": {
+        "type": {
+          "const": "FlagExists"
+        },
+        "key": {
+          "$ref": "#/$defs/FlagKey"
+        }
+      },
+      "required": [
+        "type",
+        "key"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "GlobalMoodAtLeast",
+      "properties": {
+        "type": {
+          "const": "GlobalMoodAtLeast"
+        },
+        "axis": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/MoodAxis"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "axis",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "GlobalMoodAtMost",
+      "properties": {
+        "type": {
+          "const": "GlobalMoodAtMost"
+        },
+        "axis": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/MoodAxis"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "axis",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "RegimeIs",
+      "properties": {
+        "type": {
+          "const": "RegimeIs"
+        },
+        "regime": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/RegimeType"
+        }
+      },
+      "required": [
+        "type",
+        "regime"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "RegimePressureAtLeast",
+      "properties": {
+        "type": {
+          "const": "RegimePressureAtLeast"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "PersonaSuspicionAtLeast",
+      "properties": {
+        "type": {
+          "const": "PersonaSuspicionAtLeast"
+        },
+        "persona_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "type",
+        "persona_id",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "PersonaSuspicionAtMost",
+      "properties": {
+        "type": {
+          "const": "PersonaSuspicionAtMost"
+        },
+        "persona_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "type",
+        "persona_id",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "FactionRelationAtLeast",
+      "properties": {
+        "type": {
+          "const": "FactionRelationAtLeast"
+        },
+        "faction_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "faction_id",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "FactionRelationAtMost",
+      "properties": {
+        "type": {
+          "const": "FactionRelationAtMost"
+        },
+        "faction_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "type",
+        "faction_id",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "FactionPowerAtLeast",
+      "properties": {
+        "type": {
+          "const": "FactionPowerAtLeast"
+        },
+        "faction_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "type",
+        "faction_id",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "LeadHasEvidence",
+      "properties": {
+        "type": {
+          "const": "LeadHasEvidence"
+        },
+        "lead_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        },
+        "evidence_type": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/EvidenceType"
+        }
+      },
+      "required": [
+        "type",
+        "lead_id",
+        "evidence_type"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "LeadCompleted",
+      "properties": {
+        "type": {
+          "const": "LeadCompleted"
+        },
+        "lead_id": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/IdString"
+        }
+      },
+      "required": [
+        "type",
+        "lead_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "ContextEquals",
+      "description": "Match a single field from the current trigger's context.",
+      "properties": {
+        "type": {
+          "const": "ContextEquals"
+        },
+        "key": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/EventContextKey"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "key",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "title": "ContextIn",
+      "description": "Match any of the provided values in the current trigger's context.",
+      "properties": {
+        "type": {
+          "const": "ContextIn"
+        },
+        "key": {
+          "$ref": "https://fourthestate.dev/schemas/common.schema.json#/$defs/EventContextKey"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "type",
+        "key",
+        "values"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

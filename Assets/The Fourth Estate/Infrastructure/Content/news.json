@@ -1,0 +1,21 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.news.demo_001",
+      "era": "victorian",
+      "subject": "Demonstration in the Square",
+      "tags": ["politics"],
+      "tone_allowed": ["Supportive", "Neutral", "Critical"],
+      "tone_variants": {
+        "Supportive": { "headline": "Citizens Rally for Reform", "short": "Large peaceful march.", "effects": [] },
+        "Neutral":    { "headline": "Crowds Gather Downtown",   "short": "Demonstration reported.", "effects": [] },
+        "Critical":   { "headline": "Unrest in the Capital",    "short": "Authorities uneasy.", "effects": [] }
+      },
+      "body_generic": "A sizeable crowd gathered in the capital's main square...",
+      "personas_involved": [],
+      "source": { "type": "Anonymous" },
+      "flags": []
+    }
+  ]
+}
