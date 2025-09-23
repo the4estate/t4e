@@ -68,7 +68,3 @@ Memory & dev log record → Passed
 
 Tests green → Passed
 
-Editor tooling for preview → Passed
-=======
-0.3.x
->>>>>>> 3579ebcb311b34283c9f66a365cba6f2c04b8381
