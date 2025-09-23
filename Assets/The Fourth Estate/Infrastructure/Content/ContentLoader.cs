@@ -1,7 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
-using T4E.App.Abstractions;   
+using T4E.App.Abstractions.Ports;   
 using T4E.Domain;
 #nullable enable
 namespace T4E.Infrastructure.Content

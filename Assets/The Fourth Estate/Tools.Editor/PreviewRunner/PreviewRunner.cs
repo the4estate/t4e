@@ -22,7 +22,7 @@ public static class PreviewRunner
     {
         Directory.CreateDirectory(Path.GetDirectoryName(CsvOut) ?? ".");
 
-        var log = new UnityLogger();
+        var log = new AppLogger();
         var world = new InMemoryWorld();
         var time = new TimeService(log, new GameDate(1850, 1, Weekday.Monday, DaySegment.Morning));
 

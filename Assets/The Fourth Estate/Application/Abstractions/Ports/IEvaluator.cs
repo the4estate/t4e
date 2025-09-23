@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using T4E.Domain;
 using T4E.Domain.Core.CET;
 
-namespace T4E.App.Abstractions
+namespace T4E.App.Abstractions.Ports
 {
     public interface IEvaluator
     {

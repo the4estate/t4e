@@ -1,6 +1,6 @@
 using T4E.Domain;
 
-namespace T4E.App.Abstractions
+namespace T4E.App.Abstractions.Ports
 {
     /// <summary>
     /// Agenda service that holds scheduled timeline items

@@ -1,4 +1,4 @@
-namespace T4E.App.Abstractions
+namespace T4E.App.Abstractions.Ports
 {
     public interface IRandom
     {

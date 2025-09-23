@@ -1,4 +1,4 @@
-namespace T4E.App.Abstractions
+namespace T4E.App.Abstractions.Ports
 {
     // Keeps track of fired id's
     public interface IFiredLedger

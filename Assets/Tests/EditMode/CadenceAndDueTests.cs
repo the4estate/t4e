@@ -8,7 +8,7 @@ public class CadenceAndDueTests
     public void SundayMorningSetsEditorialFlag()
     {
         var world = new InMemoryWorld();
-        var time = new TimeService(new UnityLogger(), new GameDate(1850, 1, Weekday.Saturday, DaySegment.Night));
+        var time = new TimeService(new AppLogger(), new GameDate(1850, 1, Weekday.Saturday, DaySegment.Night));
         var cadence = new CadenceRules(world);
 
         // Sat Night -> Sun Morning
@@ -20,9 +20,9 @@ public class CadenceAndDueTests
     public void ScheduledItemFiresExactlyAtItsSlot()
     {
         var world = new InMemoryWorld();
-        var time = new TimeService(new UnityLogger(), new GameDate(1850, 1, Weekday.Monday, DaySegment.Morning));
+        var time = new TimeService(new AppLogger(), new GameDate(1850, 1, Weekday.Monday, DaySegment.Morning));
         var sched = new TimelineScheduler();
-        var disp = new TimelineDispatcher(world, new UnityLogger());
+        var disp = new TimelineDispatcher(world, new AppLogger());
 
         var slot = new GameDate(1850, 1, Weekday.Wednesday, DaySegment.Afternoon);
         sched.Enqueue(new TimelineItem("e1", slot, "event", spawnNewsIds: new[] { "n1" }));

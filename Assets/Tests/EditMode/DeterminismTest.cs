@@ -11,7 +11,7 @@ public class DeterminismTests
         (int news, int leads) Run()
         {
             var world = new InMemoryWorld();
-            var time = new TimeService(new UnityLogger(), new GameDate(1850, 1, Weekday.Monday, DaySegment.Morning));
+            var time = new TimeService(new AppLogger(), new GameDate(1850, 1, Weekday.Monday, DaySegment.Morning));
             var timelineScheduler = new TimelineScheduler();
             var rng = new DeterministicRandom(); rng.Reseed(12345);
 

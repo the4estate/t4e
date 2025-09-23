@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using T4E.App.Abstractions;            
+using T4E.App.Abstractions.Ports;            
 using T4E.Domain.Core.CET;
 
 namespace T4E.App.UseCases

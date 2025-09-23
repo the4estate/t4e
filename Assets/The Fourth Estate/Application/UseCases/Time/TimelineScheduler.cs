@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using T4E.Domain;
-using T4E.App.Abstractions;
+using T4E.App.Abstractions.Ports;
 namespace T4E.App.UseCases
 {
     // Listens to SegmentAdvanced and emits ItemDue for all items scheduled exactly at that slot.
