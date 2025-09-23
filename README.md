@@ -1,4 +1,4 @@
-﻿The Fourth Estate — M4 / News v0.4.1
+The Fourth Estate — M4 / News v0.4.1
 - New
 
 News DTOs (NewsDto, NewsToneDetailsDto, SourceDto) defined in Application.Abstractions
@@ -69,3 +69,6 @@ Memory & dev log record → Passed
 Tests green → Passed
 
 Editor tooling for preview → Passed
+=======
+0.3.x
+>>>>>>> 3579ebcb311b34283c9f66a365cba6f2c04b8381
