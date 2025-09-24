@@ -113,6 +113,7 @@ public sealed class NewsPreviewWindow : EditorWindow
                     EditorGUILayout.TextArea(body, GUILayout.Height(120));
 
                     // Effects
+                    // Effects
                     int effectCount = v.Effects != null ? v.Effects.Count : 0;
                     EditorGUILayout.Space(4);
                     EditorGUILayout.LabelField($"Effects: {effectCount}", EditorStyles.miniBoldLabel);
@@ -122,10 +123,13 @@ public sealed class NewsPreviewWindow : EditorWindow
                     }
                     else
                     {
-                        // Just list kinds if you later map them into Effect.Kind strings
                         for (int i = 0; i < v.Effects.Count; i++)
-                            EditorGUILayout.LabelField($"• Effect #{i+1}");
+                        {
+                            var eff = v.Effects[i];
+                            EditorGUILayout.LabelField($"• {eff.Kind} (#{i+1})");
+                        }
                     }
+
 
                     EditorGUILayout.Space(4);
                     using (new EditorGUILayout.HorizontalScope())
@@ -136,16 +140,24 @@ public sealed class NewsPreviewWindow : EditorWindow
                     }
 
                     EditorGUILayout.HelpBox("This window is read-only preview. Actual publishing is done in Play Mode via PublishNews use case.", MessageType.None);
+                    if (string.IsNullOrWhiteSpace(v.Headline) || string.IsNullOrWhiteSpace(v.Short))
+                    {
+                        EditorGUILayout.HelpBox(
+                            $"Tone '{toneKey}' is allowed but missing Headline or Short.",
+                            MessageType.Error);
+                    }
                 }
                 else
                 {
                     EditorGUILayout.HelpBox($"Tone variant '{toneKey}' missing for this item.", MessageType.Warning);
                 }
+ 
             }
             else
             {
                 EditorGUILayout.HelpBox("Select a news item on the left.", MessageType.Info);
             }
+
         }
 
         EditorGUILayout.EndHorizontal();

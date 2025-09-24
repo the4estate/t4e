@@ -40,6 +40,7 @@ namespace T4E.Tests.EditMode.News
             Assert.AreEqual(Tone.Critical, memory.Published[0].tone);
         }
 
+
         // ---- Test 2: determinism (same input -> same result & invocation count) ----
         [Test]
         public void Publish_IsDeterministic_ForSameInput()
@@ -65,6 +66,41 @@ namespace T4E.Tests.EditMode.News
             Assert.AreEqual(r1.Body, r2.Body);
             Assert.AreEqual(count1, count2);
         }
+        // ---- Negative Test 1: invalid tone ----
+        [Test]
+        public void Publish_InvalidTone_Throws()
+        {
+            var news = DemoNews("vic.news.invalid_tone");
+            // Allow only Supportive
+            news.ToneAllowed = new List<Tone> { Tone.Supportive };
+
+            var repo = new FakeRepo(news);
+            var applier = new FakeApplier();
+            var memory = new FakeMemory();
+            var log = new FakeLogger();
+
+            var usecase = new PublishNews(repo, applier, memory, log);
+
+            Assert.Throws<System.InvalidOperationException>(() =>
+                usecase.Execute(news.Id, Tone.Critical)); // Critical not allowed
+        }
+
+        // ---- Negative Test 2: missing news id ----
+        [Test]
+        public void Publish_MissingNewsId_Throws()
+        {
+            // FakeRepo seeded with null so it never finds anything
+            var repo = new FakeRepo(null);
+            var applier = new FakeApplier();
+            var memory = new FakeMemory();
+            var log = new FakeLogger();
+
+            var usecase = new PublishNews(repo, applier, memory, log);
+
+            Assert.Throws<System.InvalidOperationException>(() =>
+                usecase.Execute("nonexistent.news.id", Tone.Supportive));
+        }
+
 
         // ---------- helpers ----------
 
