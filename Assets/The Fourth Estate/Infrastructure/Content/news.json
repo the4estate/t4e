@@ -28,34 +28,6 @@
       "personas_involved": [],
       "source": { "type": "Anonymous" },
       "flags": []
-    },
-    {
-      "id": "vic.news.demo_002",
-      "era": "victorian",
-      "subject": "Futut la mata",
-      "tags": [ "politics" ],
-      "tone_allowed": [ "Supportive", "Neutral", "Critical" ],
-      "tone_variants": {
-        "Supportive": {
-          "headline": "Mata a fost atinsa",
-          "short": "Large peaceful march.",
-          "effects": []
-        },
-        "Neutral": {
-          "headline": "Mata a fost penetrata",
-          "short": "Demonstration reported.",
-          "effects": []
-        },
-        "Critical": {
-          "headline": "Ma-ta e fututa",
-          "short": "Authorities uneasy.",
-          "effects": []
-        }
-      },
-      "body_generic": "Se pare ca cineva e fututa",
-      "personas_involved": [],
-      "source": { "type": "Anonymous" },
-      "flags": []
     }
   ]
 }

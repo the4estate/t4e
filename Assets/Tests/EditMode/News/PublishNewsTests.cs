@@ -150,7 +150,11 @@ namespace T4E.Tests.EditMode.News
         {
             private readonly Dictionary<string, object> _byId = new();
 
-            public FakeRepo(NewsDto news) => _byId[news.Id] = news;
+            public FakeRepo(NewsDto? news = null)
+            {
+                if (news != null)
+                    _byId[news.Id] = news;
+            }
 
             public Rule[] GetRulesByTrigger(TriggerType trigger)
             {

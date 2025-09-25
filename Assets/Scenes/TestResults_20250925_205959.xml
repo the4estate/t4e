@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.0338671">
+  <test-suite type="TestSuite" id="1036" name="T4E" fullname="T4E" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.033867" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1015" name="T4E.Tests.EditMode.dll" fullname="C:/Users/MSI/Desktop/T4E/Library/ScriptAssemblies/T4E.Tests.EditMode.dll" runstate="Runnable" testcasecount="9" result="Failed" site="Child" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.029619" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24168" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1016" name="T4E" fullname="T4E" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.013038" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1017" name="Tests" fullname="T4E.Tests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.010860" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1018" name="EditMode" fullname="T4E.Tests.EditMode" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.008330" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestSuite" id="1019" name="News" fullname="T4E.Tests.EditMode.News" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.005597" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="TestFixture" id="1010" name="PublishNewsTests" fullname="T4E.Tests.EditMode.News.PublishNewsTests" classname="T4E.Tests.EditMode.News.PublishNewsTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.002907" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1014" name="Publish_MissingNewsId_Throws" fullname="T4E.Tests.EditMode.News.PublishNewsTests.Publish_MissingNewsId_Throws" methodname="Publish_MissingNewsId_Throws" classname="T4E.Tests.EditMode.News.PublishNewsTests" runstate="Runnable" seed="1411921932" result="Failed" label="Error" start-time="2025-09-25 19:59:52Z" end-time="2025-09-25 19:59:52Z" duration="0.000241" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                    <stack-trace><![CDATA[  at T4E.Tests.EditMode.News.PublishNewsTests+FakeRepo..ctor (T4E.App.Abstractions.Dtos.NewsDto news) [0x00011] in C:\Users\MSI\Desktop\T4E\Assets\Tests\EditMode\News\PublishNewsTests.cs:153 
+  at T4E.Tests.EditMode.News.PublishNewsTests.Publish_MissingNewsId_Throws () [0x00005] in C:\Users\MSI\Desktop\T4E\Assets\Tests\EditMode\News\PublishNewsTests.cs:93 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <6460d52f11fa4eaeabfca1cf2e9eca8f>:0 ]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[Saving results to: C:/Users/MSI/AppData/LocalLow/DefaultCompany/T4E\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
