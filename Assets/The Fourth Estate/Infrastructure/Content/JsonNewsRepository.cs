@@ -44,7 +44,7 @@ namespace T4E.Infrastructure.Content
                     PersonasInvolved = new List<string>(),
                     ToneAllowed = new List<Tone>(),
                     ToneVariants = new Dictionary<string, NewsToneDetailsDto>(),
-                    Source = new SourceDto { Type = SourceType.Anonymous }
+                    Source = new NewsSourcesDto()
                 };
 
                 // tags
@@ -59,13 +59,30 @@ namespace T4E.Infrastructure.Content
                 if (o["personas_involved"] is JArray persArr)
                     foreach (var p in persArr) dto.PersonasInvolved.Add((string)p!);
 
-                // source
-                if (o["source"] is JObject src)
+                // sources block
+                if (o["sources"] is JObject sourcesObj)
                 {
-                    var typeStr = (string?)src["type"] ?? "Anonymous";
-                    dto.Source.Type = typeStr == "Persona" ? SourceType.Persona : SourceType.Anonymous;
-                    if (dto.Source.Type == SourceType.Persona)
-                        dto.Source.PersonaId = (string?)src["persona_id"];
+                    var ns = new NewsSourcesDto();
+
+                    // supports[]
+                    if (sourcesObj["supports"] is JArray supArr)
+                        foreach (var s in supArr)
+                            if (!string.IsNullOrWhiteSpace((string?)s))
+                                ns.Supports.Add((string)s!);
+
+                    // conflicts[] (optional)
+                    if (sourcesObj["conflicts"] is JArray conArr)
+                        foreach (var c in conArr)
+                            if (!string.IsNullOrWhiteSpace((string?)c))
+                            {
+                                ns.Conflicts ??= new List<string>();
+                                ns.Conflicts.Add((string)c!);
+                            }
+
+                    // min_to_publish (defaults to 1 if missing)
+                    ns.MinToPublish = sourcesObj.Value<int?>("min_to_publish") ?? 1;
+
+                    dto.Source = ns;
                 }
 
                 // tone_allowed
@@ -104,7 +121,6 @@ namespace T4E.Infrastructure.Content
                             dto.ToneVariants[name] = details;
                         }
                     }
-
                     AddVariant("Supportive");
                     AddVariant("Neutral");
                     AddVariant("Critical");

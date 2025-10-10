@@ -1,9 +1,28 @@
 ﻿<linker>
+	<!-- Existing stuff -->
 	<assembly fullname="TheFourthEstate.Application.UseCases">
 		<type fullname="TheFourthEstate.Application.UseCases.*" preserve="methods"/>
 	</assembly>
 	<assembly fullname="TheFourthEstate.Infrastructure">
 		<type fullname="*.Factories.*" preserve="all"/>
 		<type fullname="*.Serialization.*" preserve="all"/>
+	</assembly>
+
+	<!-- Additions for DTOs and Repositories -->
+	<assembly fullname="T4E.App.Abstractions">
+		<type fullname="T4E.App.Abstractions.Dtos.NewsDto" preserve="all"/>
+		<type fullname="T4E.App.Abstractions.Dtos.NewsToneDetailsDto" preserve="all"/>
+		<type fullname="T4E.App.Abstractions.Dtos.NewsSourcesDto" preserve="all"/>
+		<type fullname="T4E.App.Abstractions.Dtos.SourceDto" preserve="all"/>
+	</assembly>
+
+	<assembly fullname="T4E.Infrastructure">
+		<type fullname="T4E.Infrastructure.Content.JsonNewsRepository" preserve="all"/>
+		<type fullname="T4E.Infrastructure.Content.JsonSourcesRepository" preserve="all"/>
+	</assembly>
+
+	<assembly fullname="T4E.Domain">
+		<type fullname="T4E.Domain.Core.CET.Effect" preserve="all"/>
+		<type fullname="T4E.Domain.Core.CET.Rule" preserve="all"/>
 	</assembly>
 </linker>

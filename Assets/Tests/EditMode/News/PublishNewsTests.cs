@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
 using T4E.App.Abstractions.Dtos;
 using T4E.App.Abstractions.Ports;
 using T4E.App.UseCases.News;
@@ -15,14 +15,18 @@ namespace T4E.Tests.EditMode.News
         {
             // Arrange: a news with ONE effect on Critical tone
             var news = DemoNews("vic.news.demo_001",
-                criticalEffects: new List<Effect> { default }); // default Effect is fine for counting
+                criticalEffects: new List<Effect> { default }); // one fake effect
 
-            var repo = new FakeRepo(news);
+            var sourcesRepo = new FakeSourcesRepo(
+                new SourceDto { Id = "vic.source.fake", Type = SourceType.Primary, Weight = 5 });
+
+            var world = new FakeWorld(); // no unlocked sources needed for this simple test
+            var newsRepo = new FakeNewsRepo(news);
             var applier = new FakeApplier();
             var memory = new FakeMemory();
             var log = new FakeLogger();
-
-            var usecase = new PublishNews(repo, applier, memory, log);
+            world.UnlockSource("vic.source.fake");
+            var usecase = new PublishNews(newsRepo, sourcesRepo, applier, memory, log, world, world);
 
             // Act
             var result = usecase.Execute(news.Id, Tone.Critical);
@@ -40,7 +44,6 @@ namespace T4E.Tests.EditMode.News
             Assert.AreEqual(Tone.Critical, memory.Published[0].tone);
         }
 
-
         // ---- Test 2: determinism (same input -> same result & invocation count) ----
         [Test]
         public void Publish_IsDeterministic_ForSameInput()
@@ -48,13 +51,17 @@ namespace T4E.Tests.EditMode.News
             var news = DemoNews("vic.news.demo_001",
                 criticalEffects: new List<Effect> { default, default }); // two effects
 
-            var repo = new FakeRepo(news);
+            var sourcesRepo = new FakeSourcesRepo(
+                new SourceDto { Id = "vic.source.fake", Type = SourceType.Primary, Weight = 5 });
+
+            var world = new FakeWorld();
+            var newsRepo = new FakeNewsRepo(news);
             var applier = new FakeApplier();
             var memory = new FakeMemory();
             var log = new FakeLogger();
+            world.UnlockSource("vic.source.fake");
+            var usecase = new PublishNews(newsRepo, sourcesRepo, applier, memory, log, world, world);
 
-            var usecase = new PublishNews(repo, applier, memory, log);
-            
             var r1 = usecase.Execute(news.Id, Tone.Critical);
             var count1 = applier.LastInvocationCount;
 
@@ -66,6 +73,7 @@ namespace T4E.Tests.EditMode.News
             Assert.AreEqual(r1.Body, r2.Body);
             Assert.AreEqual(count1, count2);
         }
+
         // ---- Negative Test 1: invalid tone ----
         [Test]
         public void Publish_InvalidTone_Throws()
@@ -74,12 +82,14 @@ namespace T4E.Tests.EditMode.News
             // Allow only Supportive
             news.ToneAllowed = new List<Tone> { Tone.Supportive };
 
-            var repo = new FakeRepo(news);
+            var sourcesRepo = new FakeSourcesRepo();
+            var world = new FakeWorld();
+            var repo = new FakeNewsRepo(news);
             var applier = new FakeApplier();
             var memory = new FakeMemory();
             var log = new FakeLogger();
 
-            var usecase = new PublishNews(repo, applier, memory, log);
+            var usecase = new PublishNews(repo, sourcesRepo, applier, memory, log, world, world);
 
             Assert.Throws<System.InvalidOperationException>(() =>
                 usecase.Execute(news.Id, Tone.Critical)); // Critical not allowed
@@ -90,17 +100,18 @@ namespace T4E.Tests.EditMode.News
         public void Publish_MissingNewsId_Throws()
         {
             // FakeRepo seeded with null so it never finds anything
-            var repo = new FakeRepo(null);
+            var sourcesRepo = new FakeSourcesRepo();
+            var world = new FakeWorld();
+            var repo = new FakeNewsRepo(null);
             var applier = new FakeApplier();
             var memory = new FakeMemory();
             var log = new FakeLogger();
 
-            var usecase = new PublishNews(repo, applier, memory, log);
+            var usecase = new PublishNews(repo, sourcesRepo, applier, memory, log, world, world);
 
             Assert.Throws<System.InvalidOperationException>(() =>
                 usecase.Execute("nonexistent.news.id", Tone.Supportive));
         }
-
 
         // ---------- helpers ----------
 
@@ -139,29 +150,27 @@ namespace T4E.Tests.EditMode.News
                 },
                 BodyGeneric = "A sizeable crowd gathered in the capital's main square...",
                 PersonasInvolved = new List<string>(),
-                Source = new SourceDto { Type = SourceType.Anonymous },
+                Source = new NewsSourcesDto{
+                    Supports = new List<string> { "vic.source.fake" },
+                    MinToPublish = 1
+                },
                 Flags = new List<string>()
             };
         }
 
         // ---------- fakes (no mocking framework needed) ----------
 
-        private sealed class FakeRepo : IContentRepository
+        private sealed class FakeNewsRepo : IContentRepository
         {
             private readonly Dictionary<string, object> _byId = new();
 
-            public FakeRepo(NewsDto? news = null)
+            public FakeNewsRepo(NewsDto? news = null)
             {
                 if (news != null)
                     _byId[news.Id] = news;
             }
 
-            public Rule[] GetRulesByTrigger(TriggerType trigger)
-            {
-                // For these unit tests, rules are irrelevant.
-                // Return empty array so nothing breaks.
-                return System.Array.Empty<Rule>();
-            }
+            public Rule[] GetRulesByTrigger(TriggerType trigger) => System.Array.Empty<Rule>();
 
             public T? Load<T>(string id) where T : class
             {
@@ -177,6 +186,25 @@ namespace T4E.Tests.EditMode.News
             }
         }
 
+        private sealed class FakeSourcesRepo : IContentRepository
+        {
+            private readonly Dictionary<string, object> _byId = new();
+
+            public FakeSourcesRepo(params SourceDto[] sources)
+            {
+                foreach (var s in sources)
+                    _byId[s.Id] = s;
+            }
+
+            public Rule[] GetRulesByTrigger(TriggerType trigger) => System.Array.Empty<Rule>();
+            public T? Load<T>(string id) where T : class => _byId.TryGetValue(id, out var o) && o is T t ? t : null;
+            public IEnumerable<T> LoadAll<T>() where T : class
+            {
+                foreach (var kv in _byId)
+                    if (kv.Value is T t)
+                        yield return t;
+            }
+        }
 
         private sealed class FakeApplier : IEffectApplier
         {
@@ -189,19 +217,37 @@ namespace T4E.Tests.EditMode.News
             }
         }
 
+        private sealed class FakeWorld : IWorldQuery, IWorldCommands
+        {
+            public readonly HashSet<string> Unlocked = new();
+            public int AgencyCredibility { get; private set; }
+
+            public void UnlockSource(string id) => Unlocked.Add(id);
+            public void AdjustAgencyCredibility(int delta) => AgencyCredibility += delta;
+
+            // For CET compatibility
+            public void Apply(Effect e) { /* no-op */ }
+
+            public T4E.Domain.WorldSnapshot Snapshot(T4E.Domain.GameDate now)
+            {
+                var snap = new T4E.Domain.WorldSnapshot(now);
+                snap.UnlockedSources = new HashSet<string>(Unlocked);
+                snap.AgencyCredibility = AgencyCredibility;
+                return snap;
+            }
+        }
+
         private sealed class FakeMemory : IMemoryLog
         {
             public readonly List<(string newsId, Tone tone)> Published = new();
-
-            public void RecordPublishedNews(string newsId, Tone tone)
-                => Published.Add((newsId, tone));
+            public void RecordPublishedNews(string newsId, Tone tone) => Published.Add((newsId, tone));
         }
 
         private sealed class FakeLogger : IAppLogger
         {
-            public void Info(string message) { /* no-op */ }
-            public void Warn(string message) { /* no-op */ }
-            public void Error(string message) { /* no-op */ }
+            public void Info(string message) { }
+            public void Warn(string message) { }
+            public void Error(string message) { }
         }
     }
 }

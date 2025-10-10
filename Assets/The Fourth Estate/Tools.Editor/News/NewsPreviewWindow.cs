@@ -138,6 +138,40 @@ public sealed class NewsPreviewWindow : EditorWindow
                         if (GUILayout.Button("Copy Short")) EditorGUIUtility.systemCopyBuffer = v.Short ?? "";
                         if (GUILayout.Button("Copy Body")) EditorGUIUtility.systemCopyBuffer = n.BodyGeneric ?? "";
                     }
+                    // --- Sources section ---
+                    if (n.Source != null)
+                    {
+                        EditorGUILayout.Space(6);
+                        EditorGUILayout.LabelField("Sources", EditorStyles.boldLabel);
+
+                        int supCount = n.Source.Supports?.Count ?? 0;
+                        int conCount = n.Source.Conflicts?.Count ?? 0;
+                        int minPub = n.Source.MinToPublish;
+
+                        EditorGUILayout.LabelField($"Supports: {supCount}", EditorStyles.miniBoldLabel);
+                        if (supCount > 0)
+                            foreach (var sid in n.Source.Supports)
+                                EditorGUILayout.LabelField($"• {sid}");
+
+                        EditorGUILayout.LabelField($"Conflicts: {conCount}", EditorStyles.miniBoldLabel);
+                        if (conCount > 0 && n.Source.Conflicts != null)
+                            foreach (var sid in n.Source.Conflicts)
+                                EditorGUILayout.LabelField($"• {sid}");
+
+                        EditorGUILayout.LabelField($"Min to publish: {minPub}");
+
+                        // Estimate potential credibility tier
+                        string tier = "(Unknown)";
+                        int totalWeight = supCount * 3; // assume average weight for preview
+                        if (totalWeight <= 3) tier = "Weak";
+                        else if (totalWeight <= 7) tier = "Solid";
+                        else tier = "Corroborated";
+                        EditorGUILayout.HelpBox($"Max potential tier (if all supports unlocked): {tier}", MessageType.None);
+                    }
+                    else
+                    {
+                        EditorGUILayout.HelpBox("No sources block in this news item.", MessageType.Info);
+                    }
 
                     EditorGUILayout.HelpBox("This window is read-only preview. Actual publishing is done in Play Mode via PublishNews use case.", MessageType.None);
                     if (string.IsNullOrWhiteSpace(v.Headline) || string.IsNullOrWhiteSpace(v.Short))

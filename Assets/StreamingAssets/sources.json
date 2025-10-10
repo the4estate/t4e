@@ -1,0 +1,22 @@
+{
+  "content_version": 1,
+  "items": [
+    {
+      "id": "vic.source.clara_letter_001",
+      "era": "victorian",
+      "type": "Primary",
+      "weight": 5,
+      "supports_news_ids": [ "vic.news.demo_001" ],
+      "content_ref": "letter_clara_week1"
+    },
+    {
+      "id": "vic.source.gov_denial_001",
+      "era": "victorian",
+      "type": "Official",
+      "weight": 3,
+      "supports_news_ids": [],
+      "conflicts_news_ids": [ "vic.news.demo_001" ],
+      "content_ref": "gov_speech_jan1850"
+    }
+  ]
+}

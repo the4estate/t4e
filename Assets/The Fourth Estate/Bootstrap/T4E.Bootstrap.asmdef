@@ -1,7 +1,10 @@
 {
-  "name": "T4E.Presentation",
+  "name": "T4E.Bootstrap",
   "references": [
     "T4E.App.UseCases",
+    "T4E.App.Abstractions",
+    "T4E.Infrastructure",
+    "T4E.Domain",
     "Unity.InputSystem"
   ],
   "autoReferenced": true,

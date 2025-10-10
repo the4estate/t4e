@@ -1,28 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using T4E.App.Abstractions;
+using System.Linq;
+using T4E.Domain.Core.News; // for CredibilityEvaluator, SourceWeight, CredibilityTier
 using T4E.App.Abstractions.Dtos;
-using T4E.App.Abstractions.Ports; // IMemoryLog (your port namespace)
+using T4E.App.Abstractions.Ports;
 using T4E.Domain.Core.CET;
 
 namespace T4E.App.UseCases.News
 {
     public sealed class PublishNews
     {
-        private readonly IContentRepository _content;
+        private readonly IContentRepository _newsRepo;
+        private readonly IContentRepository _sourcesRepo;
         private readonly IEffectApplier _effects;
         private readonly IMemoryLog _memory;
         private readonly IAppLogger _log;
+        private readonly IWorldQuery _world;
+        private readonly IWorldCommands _cmds;
 
-        public PublishNews(IContentRepository content,
+        public PublishNews(IContentRepository newsRepo,
+                           IContentRepository sourcesRepo,
                            IEffectApplier effects,
                            IMemoryLog memory,
-                           IAppLogger log)
+                           IAppLogger log,
+                           IWorldQuery world,
+                           IWorldCommands cmds)
         {
-            _content = content;
+            _newsRepo = newsRepo;
+            _sourcesRepo = sourcesRepo;
             _effects = effects;
             _memory = memory;
             _log = log;
+            _world = world;
+            _cmds = cmds;
         }
 
         public Result Execute(string newsId, Tone tone)
@@ -30,50 +40,83 @@ namespace T4E.App.UseCases.News
             if (string.IsNullOrWhiteSpace(newsId))
                 throw new ArgumentException("newsId required", nameof(newsId));
 
-            var news = _content.Load<NewsDto>(newsId); // IContentRepository.Load<T>(id)
-            if (news == null)
-                throw new InvalidOperationException($"News not found: {newsId}");
+            var news = _newsRepo.Load<NewsDto>(newsId)
+                       ?? throw new InvalidOperationException($"News not found: {newsId}");
 
             if (!news.ToneAllowed.Contains(tone))
                 throw new InvalidOperationException($"Tone {tone} not allowed for {newsId}");
 
-            var toneKey = tone.ToString(); // "Supportive"/"Neutral"/"Critical"
+            var toneKey = tone.ToString();
             if (!news.ToneVariants.TryGetValue(toneKey, out var variant) || variant == null)
                 throw new InvalidOperationException($"Tone variant {toneKey} missing for {newsId}");
 
-            // Wrap each Effect in an EffectInvocation with a tiny synthetic Rule as the source.
-            // This keeps logs/idempotency consistent with the rest of CET.
+            // --- credibility logic ---
+            var unlocked = _world.Snapshot(default).UnlockedSources;
+            var allSources = _sourcesRepo.LoadAll<SourceDto>().ToList();
+
+            // Map DTOs → Domain value type
+            var supports = news.Source?.Supports ?? new List<string>();
+            var conflicts = news.Source?.Conflicts ?? new List<string>();
+
+            var supportingWeights = allSources
+                .Where(s => supports.Contains(s.Id))
+                .Select(s => new SourceWeight(s.Id, s.Weight))
+                .ToList();
+
+            var conflictingWeights = allSources
+                .Where(s => conflicts.Contains(s.Id))
+                .Select(s => new SourceWeight(s.Id, s.Weight))
+                .ToList();
+
+
+            var tier = CredibilityEvaluator.Evaluate(supportingWeights, conflictingWeights, unlocked, out int net);
+            bool contested = (tier == CredibilityTier.Contested);
+            int agencyDelta = tier switch
+            {
+                CredibilityTier.Weak => -1,
+                CredibilityTier.Solid => +1,
+                CredibilityTier.Corroborated => +2,
+                _ => 0
+            };
+            if (contested && tier == CredibilityTier.Weak)
+                agencyDelta = -1;
+
+            // Apply credibility adjustment to world
+            _cmds.AdjustAgencyCredibility(agencyDelta);
+
+            // --- apply tone effects as before ---
             var srcRule = new Rule(
-                eventId: news.Id,          // "vic.news.demo_001" (can prefix "news:" if you prefer)
-                ruleIndex: 0,              // stable small index
-                trigger: default,          // we’re publishing manually; default TriggerType is fine
+                eventId: news.Id,
+                ruleIndex: 0,
+                trigger: default,
                 priority: 0,
-                conditions: Array.Empty<Condition>(),   // none: publish is a player action
+                conditions: Array.Empty<Condition>(),
                 effects: variant.Effects?.ToArray() ?? Array.Empty<Effect>(),
                 exclusiveFlag: null,
                 slotKind: null,
                 background: false
             );
 
-            var invocations = new List<EffectInvocation>(variant.Effects?.Count ?? 0);
+            var invocations = new List<EffectInvocation>();
             if (variant.Effects != null)
             {
-                for (int i = 0; i < variant.Effects.Count; i++)
-                    invocations.Add(new EffectInvocation(srcRule, variant.Effects[i]));
+                foreach (var eff in variant.Effects)
+                    invocations.Add(new EffectInvocation(srcRule, eff));
             }
 
-            // Apply effects via adapter (will call IWorldCommands.Apply under the hood)
-            var applied = _effects.Apply(invocations); // returns count applied
+            var applied = _effects.Apply(invocations);
 
-            // Record memory footprint for future conditions/narrative
+            // Record memory (for determinism/debug)
             _memory.RecordPublishedNews(news.Id, tone);
 
-            // Dev log for traceability
-            _log.Info($"Published {news.Id} [{tone}] → applied {applied} effects; headline='{variant.Headline}'");
+            // Log trace
+            _log.Info($"Published {news.Id} [{tone}] tier={tier}{(contested ? " (Contested)" : "")} " +
+                      $"→ applied {applied} effects; Δcred={agencyDelta}");
 
-            // Return what the UI needs to render the article
-            return new Result(news.Id, tone, variant.Headline, variant.Short, news.BodyGeneric);
+            return new Result(news.Id, tone, variant.Headline, variant.Short,
+                news.BodyGeneric, tier.ToString(), contested);
         }
+
 
         public readonly struct Result
         {
@@ -82,14 +125,19 @@ namespace T4E.App.UseCases.News
             public readonly string Headline;
             public readonly string Short;
             public readonly string Body;
+            public readonly string Tier;
+            public readonly bool Contested;
 
-            public Result(string newsId, Tone tone, string headline, string @short, string body)
+            public Result(string newsId, Tone tone, string headline, string @short,
+                          string body, string tier, bool contested)
             {
                 NewsId = newsId;
                 Tone = tone;
                 Headline = headline;
                 Short = @short;
                 Body = body;
+                Tier = tier;
+                Contested = contested;
             }
         }
     }

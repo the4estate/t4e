@@ -16,7 +16,8 @@ namespace T4E.Domain.Core.CET
         Fine,
         Arrest,
         RegimePressureDelta,
-        AddMemoryLog
+        AddMemoryLog,
+        UnlockSource
     }
 
     // Scheduling shape used by effects and/or rules
