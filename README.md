@@ -1,4 +1,5 @@
-The Fourth Estate — v0.4.2.0
+The Fourth Estate — v0.4.2
+
 
 Leads fully playable and verifiable:
 
