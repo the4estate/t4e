@@ -7,7 +7,7 @@ Spawn a lead → collect evidence → Expose → apply effects like News.
 
 Deterministic, world-saveable state model (no Unity deps in Domain/UseCases).
 
-News are locked to sources and a Source Credibility Calculator estimates agency “circulation & credibility”.
+News are now locked to sources and a Source Credibility Calculator estimates agency “circulation & credibility”.
 
 Project layout 
 Assets/The Fourth Estate
